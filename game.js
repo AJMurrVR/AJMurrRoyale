@@ -19,21 +19,23 @@ const db = firebase.firestore();
 let currentUser = null;
 let players = [];
 const bots = 5;
+const botNames = ["BotAlpha","BotBravo","BotCharlie","BotDelta","BotEcho"];
+let hue = 0; // For RGB animation
 
+// ---------------------------
 // UI ELEMENTS
 const titleScreen = document.getElementById("titleScreen");
 const loginScreen = document.getElementById("loginScreen");
 const lobby = document.getElementById("lobby");
-
 const loginBtn = document.getElementById("loginBtn");
 const createAccountBtn = document.getElementById("createAccountBtn");
 const loginSubmit = document.getElementById("loginSubmit");
 const backToTitle = document.getElementById("backToTitle");
-
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
-
 const mapList = document.getElementById("mapList");
+const killFeedElement = document.getElementById("killFeed");
+const shopElement = document.getElementById("shopItems");
 
 // ---------------------------
 // UI HANDLERS
@@ -41,12 +43,10 @@ loginBtn.addEventListener("click", () => {
   hideAllUI();
   loginScreen.classList.remove("hidden");
 });
-
 backToTitle.addEventListener("click", () => {
   hideAllUI();
   titleScreen.classList.remove("hidden");
 });
-
 function hideAllUI() {
   titleScreen.classList.add("hidden");
   loginScreen.classList.add("hidden");
@@ -66,18 +66,11 @@ loginSubmit.addEventListener("click", () => {
       // Create new account
       let initialItems = [];
       if (currentUser === "AJMurr") initialItems.push("RGB Skin");
-      userRef.set({
-        coins: 0,
-        crown: false,
-        items: initialItems
-      });
+      userRef.set({ coins:0, crown:false, items: initialItems });
     } else if (currentUser === "AJMurr") {
-      // Ensure AJMurr always has RGB Skin
       const data = doc.data();
       if (!data.items.includes("RGB Skin")) {
-        userRef.update({
-          items: firebase.firestore.FieldValue.arrayUnion("RGB Skin")
-        });
+        userRef.update({ items: firebase.firestore.FieldValue.arrayUnion("RGB Skin") });
       }
     }
   });
@@ -85,6 +78,7 @@ loginSubmit.addEventListener("click", () => {
   hideAllUI();
   lobby.classList.remove("hidden");
   loadMaps();
+  loadShop();
 });
 
 // ---------------------------
@@ -92,20 +86,13 @@ loginSubmit.addEventListener("click", () => {
 function publishMap(mapData, mapName) {
   if (!currentUser) return alert("Login first!");
   const category = (currentUser === "AJMurr") ? "By AJMurr" : "Community";
-  db.collection("maps").add({
-    name: mapName,
-    creator: currentUser,
-    category: category,
-    data: mapData,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(() => alert("Map published!"));
+  db.collection("maps").add({ name: mapName, creator: currentUser, category: category, data: mapData, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(() => alert("Map published!"));
 }
-
 function banMap(mapId) {
   if (currentUser !== "AJMurr") return alert("Not authorized");
   db.collection("maps").doc(mapId).delete().then(() => alert("Map banned"));
 }
-
 function loadMaps() {
   mapList.innerHTML = "";
   db.collection("maps").orderBy("timestamp","desc").get().then(snapshot => {
@@ -126,34 +113,27 @@ function handleWin() {
   userRef.get().then(doc => {
     let coins = 1;
     if (doc.exists && doc.data().crown) coins = 2;
-    userRef.set({
-      coins: firebase.firestore.FieldValue.increment(coins),
-      crown: true
-    }, { merge: true });
+    userRef.set({ coins: firebase.firestore.FieldValue.increment(coins), crown: true }, { merge: true });
   });
 }
 
 // ---------------------------
 // ITEM SHOP (Excludes RGB Skin)
 function loadShop() {
-  const shop = document.getElementById("shopItems");
-  if (!shop) return;
-  shop.innerHTML = "";
-
+  if (!shopElement) return;
+  shopElement.innerHTML = "";
   const items = [
     { name: "Red Hat", cost: 5 },
     { name: "Blue Gun Skin", cost: 10 },
     { name: "Gold Belt", cost: 15 }
   ];
-
   items.forEach(item => {
     const btn = document.createElement("button");
     btn.textContent = `${item.name} - ${item.cost} coins`;
     btn.onclick = () => buyItem(item);
-    shop.appendChild(btn);
+    shopElement.appendChild(btn);
   });
 }
-
 function buyItem(item) {
   if (!currentUser) return alert("Login first!");
   const userRef = db.collection("users").doc(currentUser);
@@ -161,10 +141,7 @@ function buyItem(item) {
     if (!doc.exists) return alert("Error");
     const coins = doc.data().coins || 0;
     if (coins < item.cost) return alert("Not enough coins!");
-    userRef.update({
-      coins: firebase.firestore.FieldValue.increment(-item.cost),
-      items: firebase.firestore.FieldValue.arrayUnion(item.name)
-    });
+    userRef.update({ coins: firebase.firestore.FieldValue.increment(-item.cost), items: firebase.firestore.FieldValue.arrayUnion(item.name) });
     alert(`${item.name} purchased!`);
   });
 }
@@ -177,19 +154,56 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 function spawnBots() {
-  for (let i = 0; i < bots; i++) {
-    players.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, isBot: true });
+  for (let i=0;i<bots;i++) {
+    const botName = botNames[Math.floor(Math.random()*botNames.length)] + Math.floor(Math.random()*1000);
+    players.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, isBot:true, name:botName });
   }
 }
 
-function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+// ---------------------------
+// KILL FEED
+function addKillFeed(killer, victim) {
+  const entry = document.createElement("div");
+  entry.textContent = `${killer} eliminated ${victim}`;
+  killFeedElement.prepend(entry);
+  if (killFeedElement.childElementCount>10) killFeedElement.removeChild(killFeedElement.lastChild);
+}
+function eliminatePlayer(killer, victimIndex) {
+  const victim = players[victimIndex];
+  addKillFeed(killer.name, victim.name);
+  players.splice(victimIndex,1);
+}
 
-  // Draw players (blocker-style)
-  players.forEach(p => {
-    ctx.fillStyle = (p.name==="AJMurr"?"#ff00ff":p.isBot?"red":"green");
-    ctx.fillRect(p.x, p.y, 40, 40);
+// ---------------------------
+// EXAMPLE BOT AI (eliminates random player every 5 sec)
+function botAI() {
+  players.forEach((bot,i)=>{
+    if(bot.isBot){
+      const targetIndex = Math.floor(Math.random()*players.length);
+      if(players[targetIndex] && players[targetIndex]!==bot){
+        eliminatePlayer(bot,targetIndex);
+      }
+    }
   });
+}
+setInterval(botAI,5000);
+
+// ---------------------------
+// GAME LOOP WITH RGB ANIMATION FOR AJMURR
+function gameLoop() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  players.forEach(p=>{
+    if(p.name==="AJMurr") {
+      ctx.fillStyle = `hsl(${hue},100%,50%)`; // RGB animated
+    } else {
+      ctx.fillStyle = p.isBot ? "red" : "green";
+    }
+    ctx.fillRect(p.x,p.y,40,40);
+  });
+
+  hue += 2;
+  if(hue>=360) hue=0;
 
   requestAnimationFrame(gameLoop);
 }
