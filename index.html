@@ -12,72 +12,92 @@
 
 </head>
 <body>
+  <!-- Animated background layers -->
+  <div id="animatedBg" aria-hidden="true"></div>
+
   <!-- Title Screen -->
-  <div id="titleScreen" class="ui-screen">
-    <h1>AJMurr Royale</h1>
-    <div class="btnRow">
-      <button id="loginBtn">Login</button>
-      <button id="createAccountBtn">Create Account</button>
+  <div id="titleScreen" class="ui-screen visible">
+    <div class="card">
+      <h1>AJMurr Royale</h1>
+      <div class="btnRow">
+        <button id="loginBtn">Login</button>
+        <button id="createAccountBtn">Create Account</button>
+      </div>
     </div>
   </div>
 
   <!-- Login Screen -->
   <div id="loginScreen" class="ui-screen hidden">
-    <input id="username" placeholder="Username">
-    <input id="password" placeholder="Password" type="password">
-    <div class="btnRow">
-      <button id="loginSubmit">Login</button>
-      <button id="backToTitle">Back</button>
+    <div class="card">
+      <h3>Login</h3>
+      <input id="username" placeholder="Username" autocomplete="off">
+      <input id="password" placeholder="Password" type="password" autocomplete="off">
+      <div class="btnRow">
+        <button id="loginSubmit">Login</button>
+        <button id="backToTitle">Back</button>
+      </div>
     </div>
   </div>
 
   <!-- Lobby -->
   <div id="lobby" class="ui-screen hidden">
-    <!-- Top Tabs -->
-    <div id="lobbyTabs" class="tabs">
-      <button id="tabGameModes">Game Modes</button>
-      <button id="tabShop">Shop</button>
-      <button id="tabWardrobe">Wardrobe</button>
-      <button id="tabSettings">Settings</button>
-      <button id="tabPlayFab" style="display:none;">Admin Panel</button>
+    <!-- Top Tabs (fixed) -->
+    <div id="lobbyTabs" class="tabs" role="tablist" aria-label="Lobby tabs">
+      <button id="tabGameModes" role="tab">Game Modes</button>
+      <button id="tabShop" role="tab">Shop</button>
+      <button id="tabWardrobe" role="tab">Wardrobe</button>
+      <button id="tabSettings" role="tab">Settings</button>
+      <button id="tabPlayFab" role="tab" style="display:none;">Admin Panel</button>
     </div>
 
-    <!-- Content Sections -->
-    <div id="contentGameModes" class="tabContent">
-      <div class="gamemodePreview" id="previewArea">Hover a mode to preview</div>
-      <div class="modeButtons">
-        <button id="btnBattleRoyale">Battle Royale</button>
-        <button id="btnCreative">Creative</button>
+    <!-- Animated lobby panel (fades in) -->
+    <div id="lobbyPanel" class="tabContent animatedPanel">
+      <!-- Game Modes content -->
+      <div id="contentGameModes" class="tabInner">
+        <div class="leftColumn">
+          <div class="gamemodePreview" id="previewArea">Hover a map or mode to preview</div>
+          <div class="modeButtons">
+            <div class="mode-card" id="modeBR" tabindex="0"><strong>Battle Royale</strong></div>
+            <div class="mode-card" id="modeCreative" tabindex="0"><strong>Creative</strong></div>
+          </div>
+        </div>
+        <div class="rightColumn">
+          <h3>Maps</h3>
+          <div id="mapList"></div>
+        </div>
       </div>
-      <div id="mapList"></div>
-    </div>
 
-    <div id="contentShop" class="tabContent hidden">
-      <h3>Shop</h3>
-      <div id="shopItems"></div>
-    </div>
+      <!-- Shop -->
+      <div id="contentShop" class="tabInner hidden">
+        <h3>Shop</h3>
+        <div id="shopItems"></div>
+      </div>
 
-    <div id="contentWardrobe" class="tabContent hidden">
-      <h3>Wardrobe</h3>
-      <div id="wardrobeItems"></div>
-    </div>
+      <!-- Wardrobe -->
+      <div id="contentWardrobe" class="tabInner hidden">
+        <h3>Wardrobe</h3>
+        <div id="wardrobeItems"></div>
+      </div>
 
-    <div id="contentSettings" class="tabContent hidden">
-      <h3>Settings</h3>
-      <div id="graphicsSettings">Graphics settings placeholder</div>
-    </div>
+      <!-- Settings -->
+      <div id="contentSettings" class="tabInner hidden">
+        <h3>Settings</h3>
+        <div id="graphicsSettings">Graphics: <select id="graphicsSelect"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+      </div>
 
-    <div id="contentPlayFab" class="tabContent hidden">
-      <h3>Admin Panel (AJMurr only)</h3>
-      <div id="playFabPanel"></div>
+      <!-- Admin / PlayFab-like -->
+      <div id="contentPlayFab" class="tabInner hidden">
+        <h3>Admin Panel</h3>
+        <div id="playFabPanel"></div>
+      </div>
     </div>
   </div>
 
   <!-- Kill feed -->
-  <div id="killFeed" class="kill-feed"></div>
+  <div id="killFeed" class="kill-feed" aria-live="polite"></div>
 
   <!-- Game Canvas -->
-  <canvas id="gameCanvas"></canvas>
+  <canvas id="gameCanvas" aria-label="Game canvas"></canvas>
 
 <script src="game.js"></script>
 </body>
