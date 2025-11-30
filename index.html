@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AJMurr Royale</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/12.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore-compat.js"></script>
+
+</head>
+<body>
+
+<!-- Title Screen -->
+<div id="titleScreen" class="ui-screen">
+  <h1>AJMurr Royale</h1>
+  <button id="loginBtn">Login</button>
+  <button id="createAccountBtn">Create Account</button>
+</div>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="ui-screen hidden">
+  <input id="username" placeholder="Username">
+  <input id="password" placeholder="Password" type="password">
+  <button id="loginSubmit">Login</button>
+  <button id="backToTitle">Back</button>
+</div>
+
+<!-- Lobby -->
+<div id="lobby" class="ui-screen hidden">
+  <h2>Lobby</h2>
+  <button id="battleRoyaleBtn">Battle Royale</button>
+  <button id="creativeBtn">Creative</button>
+  <div id="mapList"></div>
+</div>
+
+<!-- Game Canvas -->
+<canvas id="gameCanvas"></canvas>
+
+<script src="game.js"></script>
+</body>
+</html>
