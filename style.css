@@ -1,57 +1,31 @@
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom, #87CEFA, #FFE4B5);
-  overflow: hidden;
-}
+/* AJMurr Royale styles (playful, colorful) */
+* { box-sizing: border-box; }
+html,body { height:100%; margin:0; font-family:Inter, Arial, sans-serif; background: linear-gradient(180deg,#87CEFA,#FFE4B5); }
+canvas { position:fixed; inset:0; width:100%; height:100%; background:#cceeff; z-index:0; }
+.ui-screen { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:3; color:#fff; }
+.hidden { display:none; }
+.ui-screen h1, .ui-screen h3 { margin:8px 0; text-align:center; }
+.btnRow { display:flex; gap:10px; margin-top:10px; }
+button { padding:10px 16px; border-radius:8px; border:none; background:#ff6347; color:white; font-weight:600; cursor:pointer; }
+button:hover { filter:brightness(1.05); transform:translateY(-1px); }
+input { padding:8px 10px; margin:6px 0; border-radius:6px; border:1px solid rgba(0,0,0,0.1); width:200px; }
 
-canvas {
-  display: block;
-  background: #cceeff;
-  width: 100%;
-  height: 100%;
-}
+.tabs { position:relative; z-index:4; display:flex; gap:8px; padding:10px; background:rgba(255,255,255,0.06); border-radius:8px; }
+.tabContent { position:relative; z-index:4; padding:12px; width:90%; max-width:1100px; background:rgba(255,255,255,0.85); color:#111; border-radius:10px; margin-top:12px; }
 
-.ui-screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
+.gamemodePreview { height:160px; border-radius:8px; background:#eee; display:flex; align-items:center; justify-content:center; color:#333; margin-bottom:10px; }
+.modeButtons { display:flex; gap:10px; margin-bottom:10px; }
 
-.hidden {
-  display: none;
-}
+#mapList h3 { margin:14px 0 6px; color:#222; }
+#mapList div { margin-bottom:8px; }
 
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 8px;
-  border: none;
-  background: #ff6347;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
+.kill-feed { position:fixed; top:12px; right:12px; width:260px; max-height:320px; overflow:auto; background:rgba(0,0,0,0.5); color:white; padding:8px; border-radius:8px; z-index:5; font-size:14px; }
+.kill-feed div { padding:4px 6px; border-bottom:1px solid rgba(255,255,255,0.04); }
 
-button:hover {
-  background: #ff8266;
-}
+.mode-card { width:150px; height:150px; border-radius:8px; background:#fafafa; display:flex; align-items:center; justify-content:center; text-align:center; box-shadow:0 6px 18px rgba(0,0,0,0.08); cursor:pointer; }
+.mode-card img { max-width:100%; max-height:100%; border-radius:6px; }
 
-input {
-  padding: 8px;
-  margin: 5px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+@media (max-width:600px){
+  input { width:140px; }
+  .tabContent { width:96%; padding:8px; }
 }

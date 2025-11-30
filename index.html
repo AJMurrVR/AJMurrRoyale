@@ -1,43 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AJMurr Royale</title>
 <link rel="stylesheet" href="style.css">
 
-<!-- Firebase -->
+<!-- Firebase (compat) -->
 <script src="https://www.gstatic.com/firebasejs/12.6.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore-compat.js"></script>
 
 </head>
 <body>
+  <!-- Title Screen -->
+  <div id="titleScreen" class="ui-screen">
+    <h1>AJMurr Royale</h1>
+    <div class="btnRow">
+      <button id="loginBtn">Login</button>
+      <button id="createAccountBtn">Create Account</button>
+    </div>
+  </div>
 
-<!-- Title Screen -->
-<div id="titleScreen" class="ui-screen">
-  <h1>AJMurr Royale</h1>
-  <button id="loginBtn">Login</button>
-  <button id="createAccountBtn">Create Account</button>
-</div>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="ui-screen hidden">
+    <input id="username" placeholder="Username">
+    <input id="password" placeholder="Password" type="password">
+    <div class="btnRow">
+      <button id="loginSubmit">Login</button>
+      <button id="backToTitle">Back</button>
+    </div>
+  </div>
 
-<!-- Login Screen -->
-<div id="loginScreen" class="ui-screen hidden">
-  <input id="username" placeholder="Username">
-  <input id="password" placeholder="Password" type="password">
-  <button id="loginSubmit">Login</button>
-  <button id="backToTitle">Back</button>
-</div>
+  <!-- Lobby -->
+  <div id="lobby" class="ui-screen hidden">
+    <!-- Top Tabs -->
+    <div id="lobbyTabs" class="tabs">
+      <button id="tabGameModes">Game Modes</button>
+      <button id="tabShop">Shop</button>
+      <button id="tabWardrobe">Wardrobe</button>
+      <button id="tabSettings">Settings</button>
+      <button id="tabPlayFab" style="display:none;">Admin Panel</button>
+    </div>
 
-<!-- Lobby -->
-<div id="lobby" class="ui-screen hidden">
-  <h2>Lobby</h2>
-  <button id="battleRoyaleBtn">Battle Royale</button>
-  <button id="creativeBtn">Creative</button>
-  <div id="mapList"></div>
-</div>
+    <!-- Content Sections -->
+    <div id="contentGameModes" class="tabContent">
+      <div class="gamemodePreview" id="previewArea">Hover a mode to preview</div>
+      <div class="modeButtons">
+        <button id="btnBattleRoyale">Battle Royale</button>
+        <button id="btnCreative">Creative</button>
+      </div>
+      <div id="mapList"></div>
+    </div>
 
-<!-- Game Canvas -->
-<canvas id="gameCanvas"></canvas>
+    <div id="contentShop" class="tabContent hidden">
+      <h3>Shop</h3>
+      <div id="shopItems"></div>
+    </div>
+
+    <div id="contentWardrobe" class="tabContent hidden">
+      <h3>Wardrobe</h3>
+      <div id="wardrobeItems"></div>
+    </div>
+
+    <div id="contentSettings" class="tabContent hidden">
+      <h3>Settings</h3>
+      <div id="graphicsSettings">Graphics settings placeholder</div>
+    </div>
+
+    <div id="contentPlayFab" class="tabContent hidden">
+      <h3>Admin Panel (AJMurr only)</h3>
+      <div id="playFabPanel"></div>
+    </div>
+  </div>
+
+  <!-- Kill feed -->
+  <div id="killFeed" class="kill-feed"></div>
+
+  <!-- Game Canvas -->
+  <canvas id="gameCanvas"></canvas>
 
 <script src="game.js"></script>
 </body>
