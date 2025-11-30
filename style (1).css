@@ -1,0 +1,58 @@
+/* Animated background and UI styles for AJMurr Royale */
+* { box-sizing: border-box; }
+html,body { height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:#081229; color:#111; }
+#animatedBg {
+  position:fixed; inset:0; z-index:0; background: linear-gradient(120deg, rgba(255,120,120,0.08), rgba(120,200,255,0.08));
+  animation: bgShift 12s linear infinite;
+  filter: blur(10px) saturate(1.2);
+}
+@keyframes bgShift {
+  0% { background-position:0% 50%; }
+  50% { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+
+/* Canvas sits above animated background but behind UI */
+canvas { position:fixed; inset:0; width:100%; height:100%; background: linear-gradient(180deg,#cceeff,#aaddff); z-index:1; }
+
+/* Common UI panels */
+.ui-screen { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:5; pointer-events:none; }
+.ui-screen.visible { pointer-events:auto; }
+.card { background:rgba(255,255,255,0.95); color:#111; padding:20px; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.25); min-width:260px; pointer-events:auto; text-align:center; }
+.btnRow { display:flex; gap:10px; justify-content:center; margin-top:12px; }
+button { padding:10px 16px; border-radius:8px; border:none; background:#ff6347; color:white; font-weight:700; cursor:pointer; }
+button:hover { transform:translateY(-2px); filter:brightness(1.05); }
+input { padding:8px 10px; margin:6px 0; border-radius:6px; border:1px solid rgba(0,0,0,0.08); width:100%; max-width:300px; }
+
+/* Tabs fixed top */
+.tabs { position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:10010; display:flex; gap:8px; padding:8px; background:rgba(255,255,255,0.06); border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,0.14); pointer-events:auto; }
+.tabs button { background:rgba(255,255,255,0.08); color:#fff; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); }
+
+/* Lobby panel */
+.tabContent { position:fixed; top:72px; left:50%; transform:translateX(-50%); z-index:10005; padding:14px; width:92%; max-width:1200px; background:rgba(255,255,255,0.92); color:#111; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.12); pointer-events:auto; }
+.animatedPanel { animation:fadeInUp .45s ease both; }
+@keyframes fadeInUp { from { opacity:0; transform:translateY(8px) translateX(-50%); } to { opacity:1; transform:translateY(0) translateX(-50%); } }
+
+.tabInner { display:flex; gap:12px; align-items:flex-start; }
+.leftColumn { flex:1.2; }
+.rightColumn { flex:1; max-height:56vh; overflow:auto; }
+
+.gamemodePreview { height:200px; border-radius:10px; background:linear-gradient(180deg,#ffffff,#f0f6ff); display:flex; align-items:center; justify-content:center; color:#333; margin-bottom:10px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+.modeButtons { display:flex; gap:12px; }
+.mode-card { width:160px; height:120px; border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:center; text-align:center; box-shadow:0 8px 20px rgba(0,0,0,0.08); cursor:pointer; }
+.mode-card:hover { transform:translateY(-6px); transition:transform .18s ease; }
+
+#mapList h3 { margin:12px 0 8px; color:#222; }
+.mode-card strong { font-size:16px; }
+
+.kill-feed { position:fixed; top:12px; right:12px; width:260px; max-height:320px; overflow:auto; background:rgba(0,0,0,0.5); color:white; padding:8px; border-radius:8px; z-index:10020; font-size:14px; pointer-events:auto; }
+.kill-feed div { padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.04); }
+
+.mode-card img { max-width:100%; max-height:100%; border-radius:6px; }
+
+/* Small screens */
+@media (max-width:720px){
+  .tabInner { flex-direction:column; }
+  .rightColumn { max-height:36vh; }
+  .tabContent { top:90px; width:96%; }
+}
